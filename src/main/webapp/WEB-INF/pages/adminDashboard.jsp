@@ -1,379 +1,472 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+    import="java.util.List, java.util.Map" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Admin Dashboard – DigitalBazaar</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*, ::before, ::after { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body, html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ── LAYOUT ENGINE ── */
+.app { 
+    display: flex; 
+    height: 100vh; 
+    width: 100%;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+    width: 260px;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 36px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.menu li {
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #94a3b8;
+    transition: all 0.2s ease;
+}
+
+.menu li:hover { 
+    background-color: #1e293b; 
+    color: #ffffff; 
+}
+
+.menu li.active { 
+    background-color: #2563eb; 
+    color: #ffffff; 
+}
+
+/* ── MAIN LAYOUT ── */
+.main { 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    background-color: #f8fafc;
+    min-width: 0;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+    height: 64px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.topbar-title { 
+    font-size: 16px; 
+    font-weight: 700; 
+    color: #0f172a; 
+}
+
+.topbar-subtitle { 
+    font-size: 12px; 
+    color: #64748b; 
+}
+
+/* ── SCROLLABLE REGION ── */
+.content-scrollable {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 32px;
+}
+
+.content-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── STAT CARDS ── */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-label { 
+    font-size: 11px; 
+    font-weight: 600; 
+    text-transform: uppercase;
+    letter-spacing: 0.05em; 
+    color: #64748b; 
+}
+
+.stat-icon {
+    font-size: 14px;
+    color: #475569;
+}
+
+.stat-value { 
+    font-size: 26px; 
+    font-weight: 700; 
+    color: #0f172a; 
+    letter-spacing: -0.02em;
+}
+
+.stat-trend {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.trend-up { color: #16a34a; }
+.trend-down { color: #dc2626; }
+.trend-neutral { color: #64748b; }
+
+/* ── FILTERS ── */
+.filters {
+    display: flex;
+    gap: 12px;
+    padding: 18px 24px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.filters input, .filters select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+/* ── TABLE ── */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    padding: 12px 24px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table td {
+    padding: 14px 24px;
+    font-size: 13px;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover { background-color: #f8fafc; }
+
+/* ── BADGES ── */
+.badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+}
+
+.critical { background-color: #fef2f2; color: #b91c1c; }
+.low { background-color: #fffbeb; color: #b45309; }
+.ok { background-color: #f0fdf4; color: #15803d; }
+
+.btn-action {
+    color: #2563eb;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-action:hover {
+    text-decoration: underline;
+}
+
+/* ── CHART ── */
+.chart-card { min-height: 380px; }
+.chart-box { 
+    height: 300px; 
+    margin-top: 12px; 
+}
+
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .content-scrollable { padding: 16px; }
+}
+</style>
 </head>
-	<style>
-        /* ---------- BASE LAYOUT ---------- */
-        body { 
-            margin: 0; 
-            font-family: 'Inter', 'Segoe UI', sans-serif; 
-            background: #0f172a; 
-            color: #e5e7eb; 
-            display: flex; 
-        }
 
-        /* ---------- SIDEBAR ---------- */
-        .sidebar { 
-            width: 240px; 
-            height: 100vh; 
-            position: fixed; 
-            background: #020617; 
-            border-right: 1px solid #1f2937; 
-            z-index: 100; 
-        }
-        .logo { padding: 30px 20px; border-bottom: 1px solid #1f2937; }
-        .logo h2 { margin: 0; font-size: 18px; color: #3b82f6; }
-        .menu { list-style: none; padding: 20px 10px; }
-        .menu li { 
-            padding: 12px 15px; 
-            color: #94a3b8; 
-            cursor: pointer; 
-            border-radius: 8px; 
-            transition: 0.2s; 
-            margin-bottom: 5px; 
-        }
-        .menu li.active, .menu li:hover { background: #1e293b; color: white; }
-
-        /* ---------- MAIN CONTENT ---------- */
-        .main { 
-            margin-left: 240px; 
-            padding: 40px; 
-            width: 100%; 
-            box-sizing: border-box; 
-        }
-        .topbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 30px; 
-        }
-        .badge { 
-            background: #1e3a8a; 
-            color: #93c5fd; 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            font-size: 11px; 
-            font-weight: bold; 
-        }
-        .logout { 
-            background: transparent; 
-            border: 1px solid #ef4444; 
-            color: #ef4444; 
-            padding: 8px 16px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            transition: 0.2s; 
-        }
-        .logout:hover { background: #ef4444; color: white; }
-
-        /* ---------- STATS CARDS ---------- */
-        .stats { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            margin-bottom: 30px; 
-        }
-        .card { 
-            background: #111827; 
-            padding: 24px; 
-            border-radius: 12px; 
-            border: 1px solid #1e293b; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: center; 
-        }
-        .card h3 { margin: 10px 0; font-size: 32px; }
-
-        /* ---------- CONTROL BAR (SEARCH & FILTER) ---------- */
-        .control-bar {
-            display: flex;
-            justify-content: flex-end;
-            background: #111827;
-            padding: 15px 20px;
-            border-radius: 12px 12px 0 0;
-            border: 1px solid #1f2937;
-            border-bottom: none;
-        }
-        .controls-wrapper {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .search-box input {
-            width: 250px;
-            padding: 10px 15px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            border-radius: 8px;
-            outline: none;
-        }
-        .filter-box select {
-            padding: 10px 15px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* ---------- TABLE SECTION ---------- */
-        .container { 
-            background: #111827; 
-            border-radius: 0 0 12px 12px; 
-            border: 1px solid #1f2937; 
-            overflow: hidden; 
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 16px 20px; vertical-align: middle; border-top: 1px solid #1e293b; }
-        
-        th { 
-            color: #94a3b8; 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            background: rgba(15, 23, 42, 0.5); 
-            text-align: left;
-            border-top: none;
-        }
-
-        th:nth-child(2), td:nth-child(2) { 
-		    text-align: center; 
-		    width: 80px; 
-		}
-
-        .img-box { 
-            width: 48px; 
-            height: 48px; 
-            background: #1e293b; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            border: 1px solid #334155;
-            display: inline-block; /* Essential for text-align center to work */
-        }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .product-title { font-weight: 600; color: #f8fafc; font-size: 14px; }
-        .category-tag { background: #1f2937; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #cbd5e1; }
-
-        .edit-btn { background: #3b82f6; border: none; padding: 8px 14px; border-radius: 6px; color: white; cursor: pointer; font-weight: 500; }
-        .delete-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 8px 14px; border-radius: 6px; cursor: pointer; margin-left: 5px; }
-        .delete-btn:hover { background: #ef4444; color: white; }
-
-        /* ---------- MODALS ---------- */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(2, 6, 23, 0.85); 
-            z-index: 1000; 
-            backdrop-filter: blur(4px); 
-        }
-        .modal-content { 
-            background: #111827; 
-            margin: 5% auto; 
-            padding: 30px; 
-            width: 400px; 
-            border-radius: 16px; 
-            border: 1px solid #334155; 
-        }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; }
-        .modal input { 
-            width: 100%; padding: 12px; 
-            background: #0f172a; 
-            border: 1px solid #334155; 
-            border-radius: 8px; color: white; 
-            box-sizing: border-box; 
-        }
-        .modal-footer { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-save { flex: 1; background: #3b82f6; border: none; padding: 12px; border-radius: 8px; color: white; cursor: pointer; font-weight: bold; }
-        .btn-close { background: #334155; border: none; padding: 12px; border-radius: 8px; color: white; cursor: pointer; }
-    </style>
 <body>
-	<div class="sidebar">
-        <div class="logo">
-            <h2>DigitalBazaar</h2>
-            <small>ADMIN PANEL</small>
-        </div>
+
+<%
+int totalOrders = (Integer)(request.getAttribute("totalOrders")!=null?request.getAttribute("totalOrders"):0);
+double totalSales = (Double)(request.getAttribute("totalSales")!=null?request.getAttribute("totalSales"):0.0);
+int totalCustomers = (Integer)(request.getAttribute("totalCustomers")!=null?request.getAttribute("totalCustomers"):0);
+
+List<Map<String,Object>> lowStock = (List<Map<String,Object>>)request.getAttribute("lowStock");
+List<String> chartLabels = (List<String>)request.getAttribute("chartLabels");
+List<Double> chartData = (List<Double>)request.getAttribute("chartData");
+List<String> catLabels = (List<String>)request.getAttribute("catLabels");
+%>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="logo">DigitalBazaar</div>
         <ul class="menu">
-            <li class="active">Inventory</li>
-            <li>Orders</li>
-            <li>Customers</li>
+            <li class="active">Dashboard</li>
+            <li onclick="goTo('products')">Products</li>
+            <li onclick="goTo('orders')">Orders</li>
+            <li onclick="goTo('customers')">Customers</li>
         </ul>
-    </div>
+    </aside>
 
     <div class="main">
-        <div class="topbar">
-            <h2>Inventory Control <span class="badge">LIVE SYNC</span></h2>
-            <button class="logout">Logout Session</button>
-        </div>
 
-        <div class="stats">
-            <div class="card"><p>Total Items</p><h3>48</h3></div>
-            <div class="card"><p>Low Stock</p><h3 style="color:#fbbf24">08</h3></div>
-            <div class="card">
-                <p>Quick Actions</p>
-                <div style="margin-top:10px;">
-                    <button class="edit-btn" onclick="openAdd()">+ Add New Product</button>
-                </div>
+        <header class="topbar">
+            <div>
+                <h1 class="topbar-title">Admin Dashboard</h1>
+                <span class="topbar-subtitle">Manage inventory and monitor store health</span>
             </div>
-        </div>
+        </header>
 
-        <div class="control-bar">
-            <div class="controls-wrapper">
-                <div class="search-box">
-                    <input type="text" id="adminSearch" placeholder="Search product name..." onkeyup="filterInventory()">
+        <main class="content-scrollable">
+            <div class="content-inner">
+
+                <div class="grid">
+                    <div class="card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Revenue</span>
+                            <span class="stat-icon">💰</span>
+                        </div>
+                        <div class="stat-value">$<%= totalSales %></div>
+                        <div class="stat-trend trend-up">▲ +12.5% vs last week</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Orders</span>
+                            <span class="stat-icon">🛒</span>
+                        </div>
+                        <div class="stat-value"><%= totalOrders %></div>
+                        <div class="stat-trend trend-up">▲ +8.2% vs last week</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-header">
+                            <span class="stat-label">Customers</span>
+                            <span class="stat-icon">👥</span>
+                        </div>
+                        <div class="stat-value"><%= totalCustomers %></div>
+                        <div class="stat-trend trend-down">▼ -2.1% vs last week</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-header">
+                            <span class="stat-label">Inventory Alerts</span>
+                            <span class="stat-icon">⚠️</span>
+                        </div>
+                        <div class="stat-value"><%= (lowStock!=null?lowStock.size():0) %></div>
+                        <div class="stat-trend trend-neutral">0% vs last week</div>
+                    </div>
                 </div>
-                <div class="filter-box">
-                    <select id="adminCategoryFilter" onchange="filterInventory()">
-                        <option value="all">All Categories</option>
-                        <option value="Peripherals">Peripherals</option>
-                        <option value="GPU">GPU</option>
-                        <option value="CPU">CPU</option>
-                        <option value="RAM">RAM</option>
-                    </select>
+
+                <div class="card chart-card">
+                    <span class="card-title">Weekly Revenue</span>
+                    <div class="chart-box">
+                        <canvas id="chart"></canvas>
+                    </div>
                 </div>
+
+                <div class="card">
+                    <div class="filters">
+                        <input type="text" id="search" placeholder="Search product...">
+                        <select id="category">
+                            <option value="">All Categories</option>
+                            <% if(catLabels!=null){
+                                for(String c:catLabels){ %>
+                                    <option value="<%=c%>"><%=c%></option>
+                            <% }} %>
+                        </select>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Stock Level</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <% if(lowStock!=null){
+                                    for(Map<String,Object> item:lowStock){
+                                        int stock = (Integer)item.get("stock");
+                                        String cls = stock==0?"critical":stock<5?"low":"ok";
+                                %>
+                                <tr>
+                                    <td class="item-name"><%= item.get("name") %></td>
+                                    <td><%= item.get("category") %></td>
+                                    <td><%= stock %> units</td>
+                                    <td>
+                                        <span class="badge <%= cls %>">
+                                            <%= stock==0 ? "Critical" : stock<5 ? "Low" : "OK" %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-action" onclick="goTo('products')">Restock</button>
+                                    </td>
+                                </tr>
+                                <% }} %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        <div class="container">
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Stock</th>
-                        <th>Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#001</td>
-                        <td>
-                            <div class="img-box">
-                                <img src="images/keyboard.jpg" alt="product">
-                            </div>
-                        </td>
-                        <td><span class="product-title">ProStream Keyboard X</span></td>
-                        <td><span class="category-tag">Peripherals</span></td>
-                        <td>42</td>
-                        <td>$120.00</td>
-                        <td>
-                            <button class="edit-btn" onclick="openEdit('#001', 'ProStream Keyboard X', 'Peripherals', '42', '120.00', 'keyboard.jpg')">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#002</td>
-                        <td>
-                            <div class="img-box">
-                                <img src="images/rtx4090.jpg" alt="product">
-                            </div>
-                        </td>
-                        <td><span class="product-title">Nvidia RTX 4090</span></td>
-                        <td><span class="category-tag">GPU</span></td>
-                        <td>5</td>
-                        <td>$1599.00</td>
-                        <td>
-                            <button class="edit-btn" onclick="openEdit('#002', 'Nvidia RTX 4090', 'GPU', '5', '1599.00', 'rtx4090.jpg')">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        </main>
     </div>
+</div>
 
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Product Details</h3>
-            <div class="form-group">
-                <label>Name</label>
-                <input id="prodName" type="text">
-            </div>
-            <div class="form-group">
-                <label>Category</label>
-                <input id="prodCategory" type="text">
-            </div>
-            <div style="display:flex; gap:10px">
-                <div class="form-group" style="flex:1">
-                    <label>Stock</label>
-                    <input id="prodStock" type="number">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Price</label>
-                    <input id="prodPrice" type="text">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Image Filename</label>
-                <input id="prodImage" type="text">
-            </div>
-            <div class="modal-footer">
-                <button class="btn-close" onclick="closeModal()">Cancel</button>
-                <button class="btn-save" onclick="saveProduct()">Save Changes</button>
-            </div>
-        </div>
-    </div>
+<script>
+function goTo(p){
+    window.location.href = "<%=request.getContextPath()%>/"+p;
+}
 
-    <script>
-        const modal = document.getElementById("productModal");
+// SEARCH/FILTER
+document.getElementById('search').addEventListener('keyup', filter);
+document.getElementById('category').addEventListener('change', filter);
 
-        // SEARCH & FILTER LOGIC
-        function filterInventory() {
-            const searchValue = document.getElementById("adminSearch").value.toLowerCase();
-            const categoryValue = document.getElementById("adminCategoryFilter").value.toLowerCase();
-            const table = document.getElementById("inventoryTable");
-            const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+function filter(){
+    let s = document.getElementById('search').value.toLowerCase();
+    let c = document.getElementById('category').value.toLowerCase();
 
-            for (let i = 0; i < rows.length; i++) {
-                const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
-                const category = rows[i].getElementsByTagName("td")[3].textContent.toLowerCase();
+    document.querySelectorAll("#tableBody tr").forEach(row=>{
+        let name = row.children[0].innerText.toLowerCase();
+        let cat  = row.children[1].innerText.toLowerCase();
 
-                const matchesSearch = productName.includes(searchValue);
-                const matchesCategory = (categoryValue === "all" || category.includes(categoryValue));
+        row.style.display = (name.includes(s) && (c === "" || cat === c)) ? "" : "none";
+    });
+}
 
-                rows[i].style.display = (matchesSearch && matchesCategory) ? "" : "none";
+// CHART
+new Chart(document.getElementById('chart'), {
+    type: 'line',
+    data: {
+        labels: <%= chartLabels %>,
+        datasets: [{
+            data: <%= chartData %>,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.06)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2,
+            pointBackgroundColor: '#ffffff',
+            pointBorderColor: '#2563eb',
+            pointRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: {
+                grid: { display: false }
+            },
+            y: {
+                beginAtZero: true,
+                grid: { color: '#f1f5f9' },
+                ticks: {
+                    callback: function(v) { return '$' + v; }
+                }
             }
         }
+    }
+});
+</script>
 
-        // MODAL LOGIC
-        function openEdit(id, name, cat, stock, price, img) {
-            document.getElementById("modalTitle").innerText = "Edit Product";
-            document.getElementById("prodName").value = name;
-            document.getElementById("prodCategory").value = cat;
-            document.getElementById("prodStock").value = stock;
-            document.getElementById("prodPrice").value = price;
-            document.getElementById("prodImage").value = img;
-            modal.style.display = "block";
-        }
-
-        function openAdd() {
-            document.getElementById("modalTitle").innerText = "Add New Product";
-            document.getElementById("prodName").value = "";
-            document.getElementById("prodCategory").value = "";
-            document.getElementById("prodStock").value = "";
-            document.getElementById("prodPrice").value = "";
-            document.getElementById("prodImage").value = "";
-            modal.style.display = "block";
-        }
-
-        function closeModal() { modal.style.display = "none"; }
-        function saveProduct() { alert("Sending data to database..."); closeModal(); }
-        
-        window.onclick = function(event) { 
-            if (event.target == modal) { closeModal(); } 
-        }
-    </script>
 </body>
 </html>

@@ -134,13 +134,13 @@ button:hover {
     <!-- LEFT -->
     <div class="left-panel">
         <h1>DigitalBazaar</h1>
-        <h2>Admin Control Node</h2>
+        <h2>Admin Control</h2>
         <p>Restricted system access. Only authorized administrators can proceed.</p>
     </div>
 
     <!-- RIGHT -->
     <div class="right-panel">
-        <h2>Access Line</h2>
+        <h2>Login</h2>
         <p class="subtitle">Enter admin credentials</p>
 
         <% String error = (String) request.getAttribute("error");
@@ -149,13 +149,13 @@ button:hover {
         <% } %>
 
         <form action="<%=request.getContextPath()%>/adminLogin" method="post">
-            <input type="text" name="username" placeholder="Operator ID" required>
-            <input type="password" name="password" placeholder="Access Key" required>
-            <button type="submit">CONNECT SYSTEM</button>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
         </form>
 
         <div class="footer-text">
-            System Node v1.0 | Secure Channel Active
+            Authorized Login
         </div>
     </div>
 

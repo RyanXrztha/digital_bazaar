@@ -5,16 +5,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', 'Roboto', system-ui, sans-serif;
 }
 
 /* Body */
 body {
     height: 100vh;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background: #F1F5F9; /* Soft Slate */
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #0F172A; /* Deep Navy */
 }
 
 /* Container */
@@ -22,16 +23,18 @@ body {
     width: 950px;
     height: 520px;
     display: flex;
-    border-radius: 14px;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
 }
 
-/* LEFT PANEL */
+/* LEFT PANEL (Corporate Branding) */
 .left-panel {
     width: 50%;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #fff;
+    background: #0F172A;
+    color: #FFFFFF;
     padding: 60px 40px;
     display: flex;
     flex-direction: column;
@@ -39,26 +42,29 @@ body {
 }
 
 .logo {
-    color: #22d3ee;
+    color: #FFFFFF;
     margin-bottom: 25px;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 .left-panel h2 {
     font-size: 30px;
     margin-bottom: 15px;
+    font-weight: 600;
 }
 
 .left-panel p {
-    color: #cbd5f5;
+    color: #64748B; /* Technical Specs */
     line-height: 1.6;
 }
 
-/* RIGHT PANEL */
+/* RIGHT PANEL (Form Area) */
 .right-panel {
     width: 50%;
-    background: #111827;
-    color: white;
+    background: #FFFFFF;
+    color: #0F172A;
     padding: 60px 50px;
     display: flex;
     flex-direction: column;
@@ -68,11 +74,13 @@ body {
 .right-panel h2 {
     font-size: 26px;
     margin-bottom: 8px;
+    color: #0F172A;
 }
 
 .subtitle {
     margin-bottom: 30px;
-    color: #9ca3af;
+    color: #64748B;
+    font-size: 14px;
 }
 
 /* FORM */
@@ -84,34 +92,40 @@ form {
 form input {
     margin-bottom: 18px;
     padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: #1f2937;
-    color: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    background: #F1F5F9;
+    color: #0F172A;
     outline: none;
     font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+form input:focus {
+    border-color: #3B82F6; /* Sky Blue */
+    background: #FFFFFF;
 }
 
 form input::placeholder {
-    color: #6b7280;
+    color: #64748B;
 }
 
 /* BUTTON */
 button {
     padding: 14px;
     border: none;
-    border-radius: 8px;
-    background: #22d3ee;
-    color: black;
-    font-weight: bold;
+    border-radius: 4px;
+    background: #1E40AF; /* Royal Blue */
+    color: #FFFFFF;
+    font-weight: 600;
     cursor: pointer;
     font-size: 15px;
-    transition: 0.3s;
+    transition: background-color 0.2s;
     margin-top: 10px;
 }
 
 button:hover {
-    background: #06b6d4;
+    background: #172554;
 }
 
 /* SWITCH */
@@ -119,11 +133,13 @@ button:hover {
     margin-top: 25px;
     font-size: 14px;
     text-align: center;
+    color: #64748B;
 }
 
 .switch a {
-    color: #22d3ee;
+    color: #1E40AF;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .switch a:hover {

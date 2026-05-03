@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    import="java.util.List, com.DigitalBazaar.model.Product" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,512 +8,500 @@
 <title>Insert title here</title>
 </head>
 <style>
-		* {
-		  	margin: 0;
-		    padding: 0;
-		    box-sizing: border-box;
-		}
-		
-		/* ================= BODY ================= */
-		
-		body {
-		    background: #0f172a;
-		    color: #f0f0f0;
-		    font-family: Segoe UI, Arial, sans-serif;
-		    overflow-x: hidden;
-		}
-		
-		/* ================= NAVBAR ================= */
-		
-		.navbar {
-		
-		    position: fixed;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 60px;
-		    background: #0f172a;
-    		border-bottom: 1px solid #334155;
-		    display: flex;
-		    align-items: center;
-		    justify-content: space-between;
-		    padding: 0 40px;
-		    z-index: 1000;
-		}
-		
-		/* LOGO */
-		
-		.logo {
-		    color: #2563eb;
-		    font-weight: bold;
-		    letter-spacing: 2px;
-		}
-		
-		/* NAV LINKS */
-		
-		.nav-links {
-		    list-style: none;
-		    display: flex;
-		    gap: 35px;
-		}
-		
-		.nav-links a {
-		    text-decoration: none;
-		    color: #8a8a8a;
-		    font-size: 14px;
-		}
-		
-		.nav-links a:hover {
-		    color: white;
-		}
-		
-		/* ICON AREA */
-		
-		.nav-icons {
-		    display: flex;
-		    align-items: center;
-		    gap: 20px;
-		    font-size: 18px;
-		}
-		
-		/* ICON */
-		
-		.icon {
-		
-		    cursor: pointer;
-		    color: #8a8a8a;
-		    position: relative;
-		}
-		
-		.icon:hover {
-		    color: white;
-		}
-		
-		/* CART COUNT */
-		
-		.cart-count {
-		    position: absolute;
-		    top: -6px;
-		    right: -8px;
-		    background: #2563eb;
-		    color: black;
-		    font-size: 10px;
-		    padding: 2px 6px;
-		    border-radius: 50%;
-		}
-		
-		/* CART SIDEBAR */
-/* ================= PROFESSIONAL CART SIDEBAR ================= */
+* {
+	  	margin: 0;
+	    padding: 0;
+	    box-sizing: border-box;
+	}
+	
+	/* ================= BODY ================= */
+	
+	body {
+	    background: #F1F5F9;
+	    color: #0F172A;
+	    font-family: 'Inter', Segoe UI, Arial, sans-serif;
+	    overflow-x: hidden;
+	}
+	
+	/* ================= NAVBAR ================= */
+	
+	.navbar {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 60px;
+	    background: #FFFFFF;
+    	border-bottom: 1px solid #E2E8F0;
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    padding: 0 40px;
+	    z-index: 1000;
+	}
+	
+	.logo {
+	    color: #0F172A;
+	    font-weight: bold;
+	    letter-spacing: 1px;
+	}
+	
+	.nav-links {
+	    list-style: none;
+	    display: flex;
+	    gap: 35px;
+	}
+	
+	.nav-links a {
+	    text-decoration: none;
+	    color: #64748B;
+	    font-size: 14px;
+	    font-weight: 500;
+	}
+	
+	.nav-links a:hover {
+	    color: #1E40AF;
+	}
+	
+	.nav-icons {
+	    display: flex;
+	    align-items: center;
+	    gap: 20px;
+	    font-size: 18px;
+	}
+	
+	.icon {
+	    cursor: pointer;
+	    color: #0F172A;
+	    position: relative;
+	}
+	
+	.icon:hover {
+	    color: #3B82F6;
+	}
+	
+	.cart-count {
+	    position: absolute;
+	    top: -6px;
+	    right: -8px;
+	    background: #1E40AF;
+	    color: white;
+	    font-size: 10px;
+	    font-weight: bold;
+	    padding: 2px 6px;
+	    border-radius: 50%;
+	}
+	
+	/* ================= PROFESSIONAL CART SIDEBAR ================= */
 .cart-sidebar {
     position: fixed;
     top: 60px;
-    right: -400px;
-    width: 380px;
+    right: -420px;
+    width: 400px;
     height: calc(100% - 60px);
-    background: #111827; /* Slightly darker for depth */
-    border-left: 1px solid #334155;
+    background: #FFFFFF;
+    border-left: 1px solid #E2E8F0;
     display: flex;
     flex-direction: column;
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 999;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    box-shadow: -5px 0 20px rgba(0,0,0,0.08);
 }
-
 .cart-sidebar.active {
     right: 0;
 }
-
-/* HEADER SECTION */
 .cart-header {
-    padding: 24px 20px;
-    border-bottom: 1px solid #334155;
+    padding: 22px 24px;
+    border-bottom: 1px solid #E2E8F0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .cart-header h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0F172A;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
-
 .close-cart {
     cursor: pointer;
-    font-size: 24px;
-    color: #94a3b8;
+    font-size: 20px;
+    color: #94A3B8;
     transition: 0.2s;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
 }
-
 .close-cart:hover {
-    color: #ef4444;
+    color: #0F172A;
+    background: #F1F5F9;
 }
-
-/* ITEMS CONTAINER */
 #cartItems {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: 16px;
 }
-
-/* CART ITEM */
+#cartItems::-webkit-scrollbar { width: 4px; }
+#cartItems::-webkit-scrollbar-track { background: #F8FAFC; }
+#cartItems::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+.cart-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: #94A3B8;
+    font-size: 14px;
+}
+.cart-empty-icon { font-size: 40px; margin-bottom: 12px; }
 .cart-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid #1e293b;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #F1F5F9;
 }
-
+.cart-item:last-child { border-bottom: none; }
 .cart-item img {
-    width: 70px;
-    height: 70px;
-    background: #1e293b;
-    border-radius: 8px;
-    padding: 5px;
+    width: 68px;
+    height: 68px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 6px;
     object-fit: contain;
+    flex-shrink: 0;
 }
-
-.cart-item-info {
-    flex: 1;
-}
-
+.cart-item-info { flex: 1; min-width: 0; }
 .cart-item-info strong {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
     margin-bottom: 4px;
-    color: #f8fafc;
+    color: #0F172A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-
-.cart-item-info p {
-    color: #2563eb;
-    font-weight: bold;
-    font-size: 14px;
+.cart-item-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
 }
-
+.cart-item-qty {
+    font-size: 11px;
+    color: #64748B;
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+.cart-item-price {
+    color: #1E40AF;
+    font-weight: 700;
+    font-size: 15px;
+}
 .remove-item {
     background: transparent;
     border: none;
-    color: #64748b;
+    color: #CBD5E1;
     cursor: pointer;
-    font-size: 12px;
-    text-decoration: underline;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: 0.2s;
+    flex-shrink: 0;
 }
-
-.remove-item:hover {
-    color: #ef4444;
-}
-
-/* FOOTER SECTION */
+.remove-item:hover { color: #EF4444; background: #FEF2F2; }
 .cart-footer {
-    padding: 24px 20px;
-    background: #1e293b;
-    border-top: 1px solid #334155;
+    padding: 20px;
+    background: #F8FAFC;
+    border-top: 1px solid #E2E8F0;
 }
-
 .total-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 16px;
 }
-
 .total-container h3 {
-    font-size: 14px;
-    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-
 .total-amount {
-    font-size: 18px;
-    color: #fff;
-    font-weight: bold;
+    font-size: 22px;
+    color: #0F172A;
+    font-weight: 800;
 }
-
 .checkout-btn {
     width: 100%;
     padding: 14px;
-    background: #2563eb;
+    background: linear-gradient(135deg, #1E40AF, #3B82F6);
     color: white;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 14px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: 0.3s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
-
 .checkout-btn:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #172554, #1E40AF);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30,64,175,0.3);
 }
 
-/* CART ITEM */
-.cart-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #334155;
-    padding-bottom: 10px;
-}
+		/* ================= HERO ================= */
+		
+		.hero {
+		    margin-top: 60px;
+		    height: 350px;
+		    background: #0F172A;
+		    display: flex;
+		    align-items: center;
+		    padding-left: 60px;
+            color: white;
+		}
+		
+		.hero-text h1 {
+		    font-size: 40px;
+		}
+		
+		.hero-text span {
+		    color: #3B82F6;
+		}
+		
+		.hero-text p {
+		    color: #94A3B8;
+		    margin: 10px 0;
+		}
+		
+		.hero-text button {
+		    background: #1E40AF;
+		    color: white;
+            font-weight: 600;
+		    border: none;
+            border-radius: 4px;
+		    padding: 12px 24px;
+		    cursor: pointer;
+		}
+		
+		/* ================= PRODUCTS ================= */
+		
+		.products-container {
+		    padding: 40px;
+		    display: grid;
+		    grid-template-columns: repeat(5, 1fr);
+		    gap: 20px;
+		}
+		
+		.product-card {
+		    background: #FFFFFF;
+		    border: 1px solid #E2E8F0;
+		    padding: 15px;
+		    border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: border-color 0.2s;
+		}
+        .product-card:hover {
+            border-color: #3B82F6;
+        }
+		
+		.product-img {
+		    width: 100%;
+		    height: 160px;
+            background: #F8FAFC;
+            border-radius: 2px;
+            margin-bottom: 10px;
+		}
+		
+		.product-img img {
+		    width: 100%;
+		    height: 100%;
+		    object-fit: contain;
+            mix-blend-mode: multiply;
+		}
+		
+		.price-cart {
+		    display: flex;
+		    justify-content: space-between;
+		    margin-top: 10px;
+		}
+		
+		/* CONTROL BAR */
+		
+		.control-bar {
+		    margin-top: 0px;
+		    padding: 15px 60px;
+		    display: flex;
+		    justify-content: flex-end;
+		    gap: 15px;
+		    background: #FFFFFF;
+		    border-bottom: 1px solid #E2E8F0;
+		}
+		
+		/* SEARCH BOX */
+		
+		.search-box input {
+		    width: 300px;
+		    padding: 10px;
+		    background: #F1F5F9;
+		    border: 1px solid #E2E8F0;
+		    color: #0F172A;
+		    border-radius: 4px;
+		    outline: none;
+		}
+		
+		/* DROPDOWN */
+		
+		.filter-box select {
+		    padding: 10px;
+		    background: #F1F5F9;
+		    border: 1px solid #E2E8F0;
+		    color: #0F172A;
+		    border-radius: 4px;
+		}
+		
+		.search-box input:focus,
+		.filter-box select:focus {
+		    border-color: #3B82F6;
+		}
+		
+		/* PRODUCT CATEGORY */
+		
+		.category {
+		    font-size: 12px;
+		    color: #64748B;
+		}
+		
+		/* PRICE */
+		
+		.price {
+		    margin-top: 5px;
+		    color: #0F172A;
+		    font-weight: bold;
+            font-size: 1.1rem;
+		}
+		
+		/* BUTTONS */
+		
+		.product-actions {
+		    display: flex;
+		    gap: 10px;
+		    margin-top: 15px;
+		}
 
-.cart-item img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-}
-
-.cart-footer {
-    margin-top: 20px;
-}
-
-.checkout-btn {
-    width: 100%;
-    padding: 10px;
-    background: #2563eb;
-    border: none;
-    cursor: pointer;
-}
-
-/* ================= HERO ================= */
-.hero {
-    margin-top: 60px;
-    height: 350px;
-    background: black; /* TEMP BLACK BACKGROUND */
-    display: flex;
-    align-items: center;
-    padding-left: 60px;
-}
-
-.hero-text h1 {
-    font-size: 40px;
-}
-
-.hero-text span {
-    color: #2563eb;
-}
-
-.hero-text p {
-    color: #aaa;
-    margin: 10px 0;
-}
-
-.hero-text button {
-    background: #2563eb;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-/* ================= PRODUCTS ================= */
-.products-container {
-    padding: 40px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-}
-
-.product-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.product-img {
-    width: 100%;
-    height: 160px;
-}
-
-.product-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* FIT IMAGE */
-}
-
-.price-cart {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.price-cart button {
-    background: #2563eb;
-    border: none;
-    padding: 5px 10px;
-}
-
-/* FILTER BAR */
-/* CONTROL BAR */
-.control-bar {
-    margin-top: 0px;
-    padding: 10px 60px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    background: #1e293b;
-    border-bottom: 1px solid #334155;
-}
-
-/* CART SIDEBAR */
-.cart-sidebar {
-    position: fixed;
-    top: 60px;
-    right: -400px;
-    width: 350px;
-    height: calc(100% - 60px);
-    background: #1e293b;
-    border-left: 1px solid #334155;
-    padding: 20px;
-    transition: 0.3s;
-    overflow-y: auto;
-    z-index: 999;
-}
-
-.cart-sidebar.active {
-    right: 0;
-}
-
-/* CART ITEM */
-.cart-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #334155;
-    padding-bottom: 10px;
-}
-
-.cart-item img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-}
-
-.cart-footer {
-    margin-top: 20px;
-}
-
-.checkout-btn {
-    width: 100%;
-    padding: 10px;
-    background: #2563eb;
-    border: none;
-    cursor: pointer;
-}
-
-/* SEARCH BOX */
-.search-box input {
-    width: 300px;
-    padding: 10px;
-    background: #0f172a;
-    border: 1px solid #334155;
-    color: white;
-    border-radius: 6px;
-    outline: none;
-}
-
-/* DROPDOWN */
-.filter-box select {
-    padding: 10px;
-    background: #111;
-    border: 1px solid #333;
-    color: white;
-    border-radius: 6px;
-}
-
-/* HOVER EFFECT */
-.search-box input:focus,
-.filter-box select:focus {
-    border-color: #00e5ff;
-    box-shadow: 0 0 8px rgba(0,229,255,0.3);
-}
-
-/* PRODUCT CATEGORY */
-.category {
-    font-size: 12px;
-    color: #888;
-}
-
-/* PRICE */
-.price {
-    margin-top: 5px;
-    color: #00e5ff;
-    font-weight: bold;
-}
-
-/* BUTTONS */
-.product-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.btn-cart {
-    flex: 1;
-    background: #2563eb;
-    border: none;
-    padding: 6px;
-    cursor: pointer;
-}
-
-.btn-buy {
-    flex: 1;
-    background: transparent;
-    border: 1px solid #2563eb;
-    color: #2563eb;
-    cursor: pointer;
-}
-
-.btn-cart:hover,
-.btn-buy:hover {
-    opacity: 0.8;
-}
-
-.btn-cart:hover,
-.hero-text button:hover {
-    background: #1d4ed8;
-}
-
-.btn-buy:hover {
-    background: #2563eb;
-    color: white;
-}
-
+		/* ================= ADD TO CART BUTTON — PROFESSIONAL ================= */
+		.btn-cart {
+		    flex: 1.5;
+		    padding: 9px 10px;
+		    background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%);
+		    color: white;
+		    font-weight: 700;
+		    font-size: 11px;
+		    letter-spacing: 0.6px;
+		    text-transform: uppercase;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    transition: all 0.25s ease;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    gap: 5px;
+		    box-shadow: 0 2px 6px rgba(30,64,175,0.25);
+		    position: relative;
+		    overflow: hidden;
+		}
+		.btn-cart::before {
+		    content: '';
+		    position: absolute;
+		    top: 0; left: -100%;
+		    width: 100%; height: 100%;
+		    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+		    transition: left 0.4s ease;
+		}
+		.btn-cart:hover::before { left: 100%; }
+		.btn-cart:hover {
+		    background: linear-gradient(135deg, #172554 0%, #1E40AF 100%);
+		    transform: translateY(-1px);
+		    box-shadow: 0 4px 12px rgba(30,64,175,0.35);
+		}
+		.btn-cart:active {
+		    transform: translateY(0);
+		    box-shadow: 0 1px 4px rgba(30,64,175,0.2);
+		}
+		.btn-cart.added {
+		    background: linear-gradient(135deg, #166534, #16a34a);
+		    box-shadow: 0 2px 6px rgba(22,101,52,0.3);
+		}
+		
+		.btn-buy {
+		    flex: 1;
+		    background: transparent;
+		    border: 1px solid #E2E8F0;
+		    color: #64748B;
+            border-radius: 4px;
+		    cursor: pointer;
+		    font-size: 11px;
+		    font-weight: 600;
+		    text-transform: uppercase;
+		    letter-spacing: 0.5px;
+		    transition: 0.2s;
+		}
+		
+		.btn-buy:hover {
+		    border-color: #1E40AF;
+		    color: #1E40AF;
+		}
 </style>
 <body>
 	<div class="navbar">
-		<div class="logo">
-			Digital_Bazaar
-		</div>
-		
+		<div class="logo">Digital_Bazaar</div>
 		<ul class="nav-links">
 			<li><a href="${pageContext.request.contextPath}/dashboard">HOME</a></li>
 			<li><a href="${pageContext.request.contextPath}/shop">SHOP</a></li>
 			<li><a href="#">CONTACT</a></li>
 		</ul>
-		
 		<div class="nav-icons">
 			<div class="icon" onclick="toggleCart()">
 			    🛒<span class="cart-count">0</span>
 			</div>
-			<div class="icon">
-				👤
-			</div>
+			<div class="icon">👤</div>
 		</div>
 	</div>
-	
 
-	<!-- CART SIDEBAR -->
+	<!-- ================= CART SIDEBAR ================= -->
 	<div class="cart-sidebar" id="cartSidebar">
-	    <h2>Your Cart</h2>
-	    
-	    <div id="cartItems"></div>
-	
+	    <div class="cart-header">
+	        <h2>Your Cart</h2>
+	        <span class="close-cart" onclick="toggleCart()">✕</span>
+	    </div>
+	    <div id="cartItems">
+	        <div class="cart-empty">
+	            <div class="cart-empty-icon">🛒</div>
+	            <div>Your cart is empty</div>
+	        </div>
+	    </div>
 	    <div class="cart-footer">
-	        <h3>Total: $<span id="totalPrice">0</span></h3>
-	        <button class="checkout-btn">Checkout</button>
+	        <div class="total-container">
+	            <h3>Total</h3>
+	            <span class="total-amount">$<span id="totalPrice">0.00</span></span>
+	        </div>
+	        <button class="checkout-btn" onclick="handleCheckout()">Proceed to Checkout</button>
 	    </div>
 	</div>
-	
-	<!-- ================= HERO ================= -->
+
+	<!-- ================= HERO (unchanged) ================= -->
 	<div class="hero">
 	    <div class="hero-text">
 	        <h1>OVERCLOCK THE <span>FUTURE</span></h1>
@@ -520,14 +509,13 @@
 	        <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">INITIALIZE</button>
 	    </div>
 	</div>
-	
-	<div class="control-bar">
 
+	<!-- ================= FILTER BAR (unchanged) ================= -->
+	<div class="control-bar">
 	    <div class="search-box">
 	        <input type="text" id="searchInput" placeholder="Search hardware...">
 	    </div>
-	
-	    <div class="filter-box"  id="products">
+	    <div class="filter-box" id="products">
 	        <select id="categoryFilter">
 	            <option value="all">All Categories</option>
 	            <option value="GPU">GPU</option>
@@ -536,603 +524,165 @@
 	            <option value="Storage">Storage</option>
 	        </select>
 	    </div>
-	
 	</div>
-	
-	<!-- ================= PRODUCTS ================= -->
+
+	<!-- ================= PRODUCTS — now from DB ================= -->
 	<div class="products-container">
-	
-	    <div class="product-card" data-name="RTX 4090" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p1.jpg"></div>
-    <h3>RTX 4090</h3>
-    <p class="category">GPU</p>
-    <div class="price">$1899</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Ryzen 9 7950X" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p2.jpg"></div>
-    <h3>Ryzen 9 7950X</h3>
-    <p class="category">CPU</p>
-    <div class="price">$599</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Corsair 32GB DDR5" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p3.jpg"></div>
-    <h3>Corsair 32GB DDR5</h3>
-    <p class="category">RAM</p>
-    <div class="price">$299</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Samsung 980 Pro 1TB" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p4.jpg"></div>
-    <h3>Samsung 980 Pro</h3>
-    <p class="category">Storage</p>
-    <div class="price">$149</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 4080" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p5.jpg"></div>
-    <h3>RTX 4080</h3>
-    <p class="category">GPU</p>
-    <div class="price">$1299</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Intel i9 13900K" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p6.jpg"></div>
-    <h3>Intel i9 13900K</h3>
-    <p class="category">CPU</p>
-    <div class="price">$649</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Kingston 16GB DDR5" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p7.jpg"></div>
-    <h3>Kingston 16GB DDR5</h3>
-    <p class="category">RAM</p>
-    <div class="price">$129</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="WD Black 2TB HDD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p8.jpg"></div>
-    <h3>WD Black 2TB HDD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$89</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 4070 Ti" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p9.jpg"></div>
-    <h3>RTX 4070 Ti</h3>
-    <p class="category">GPU</p>
-    <div class="price">$899</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Ryzen 7 7700X" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p10.jpg"></div>
-    <h3>Ryzen 7 7700X</h3>
-    <p class="category">CPU</p>
-    <div class="price">$399</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="G.Skill 32GB Trident" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p11.jpg"></div>
-    <h3>G.Skill 32GB Trident</h3>
-    <p class="category">RAM</p>
-    <div class="price">$279</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Crucial 1TB SSD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p12.jpg"></div>
-    <h3>Crucial 1TB SSD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$119</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 4060" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p13.jpg"></div>
-    <h3>RTX 4060</h3>
-    <p class="category">GPU</p>
-    <div class="price">$399</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Intel i7 13700K" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p14.jpg"></div>
-    <h3>Intel i7 13700K</h3>
-    <p class="category">CPU</p>
-    <div class="price">$419</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Corsair 16GB DDR4" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p15.jpg"></div>
-    <h3>Corsair 16GB DDR4</h3>
-    <p class="category">RAM</p>
-    <div class="price">$89</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Seagate 4TB HDD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p16.jpg"></div>
-    <h3>Seagate 4TB HDD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$109</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RX 7900 XT" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p17.jpg"></div>
-    <h3>RX 7900 XT</h3>
-    <p class="category">GPU</p>
-    <div class="price">$999</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Ryzen 5 7600X" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p18.jpg"></div>
-    <h3>Ryzen 5 7600X</h3>
-    <p class="category">CPU</p>
-    <div class="price">$249</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="ADATA 16GB DDR5" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p19.jpg"></div>
-    <h3>ADATA 16GB DDR5</h3>
-    <p class="category">RAM</p>
-    <div class="price">$119</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Samsung 2TB SSD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p20.jpg"></div>
-    <h3>Samsung 2TB SSD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$199</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 3090" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p21.jpg"></div>
-    <h3>RTX 3090</h3>
-    <p class="category">GPU</p>
-    <div class="price">$1199</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Intel i5 13400" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p22.jpg"></div>
-    <h3>Intel i5 13400</h3>
-    <p class="category">CPU</p>
-    <div class="price">$199</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Kingston 32GB RAM" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p23.jpg"></div>
-    <h3>Kingston 32GB RAM</h3>
-    <p class="category">RAM</p>
-    <div class="price">$149</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="WD 1TB SSD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p24.jpg"></div>
-    <h3>WD 1TB SSD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$99</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 4070" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p25.jpg"></div>
-    <h3>RTX 4070</h3>
-    <p class="category">GPU</p>
-    <div class="price">$799</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Ryzen 3 4100" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p26.jpg"></div>
-    <h3>Ryzen 3 4100</h3>
-    <p class="category">CPU</p>
-    <div class="price">$99</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Corsair 8GB DDR4" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p27.jpg"></div>
-    <h3>Corsair 8GB DDR4</h3>
-    <p class="category">RAM</p>
-    <div class="price">$49</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Seagate 1TB HDD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p28.jpg"></div>
-    <h3>Seagate 1TB HDD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$59</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RX 6800 XT" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p29.jpg"></div>
-    <h3>RX 6800 XT</h3>
-    <p class="category">GPU</p>
-    <div class="price">$699</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Intel i3 12100" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p30.jpg"></div>
-    <h3>Intel i3 12100</h3>
-    <p class="category">CPU</p>
-    <div class="price">$129</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="TeamGroup 16GB RAM" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p31.jpg"></div>
-    <h3>TeamGroup 16GB RAM</h3>
-    <p class="category">RAM</p>
-    <div class="price">$79</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Crucial 500GB SSD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p32.jpg"></div>
-    <h3>Crucial 500GB SSD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$49</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 3080" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p33.jpg"></div>
-    <h3>RTX 3080</h3>
-    <p class="category">GPU</p>
-    <div class="price">$799</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Ryzen 7 5800X" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p34.jpg"></div>
-    <h3>Ryzen 7 5800X</h3>
-    <p class="category">CPU</p>
-    <div class="price">$299</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="HyperX 8GB RAM" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p35.jpg"></div>
-    <h3>HyperX 8GB RAM</h3>
-    <p class="category">RAM</p>
-    <div class="price">$39</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Samsung 4TB HDD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p36.jpg"></div>
-    <h3>Samsung 4TB HDD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$139</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="RTX 4060 Ti" data-category="GPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p37.jpg"></div>
-    <h3>RTX 4060 Ti</h3>
-    <p class="category">GPU</p>
-    <div class="price">$499</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="Intel i7 12700K" data-category="CPU">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p38.jpg"></div>
-    <h3>Intel i7 12700K</h3>
-    <p class="category">CPU</p>
-    <div class="price">$329</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="ADATA 32GB DDR5" data-category="RAM">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p39.jpg"></div>
-    <h3>ADATA 32GB DDR5</h3>
-    <p class="category">RAM</p>
-    <div class="price">$159</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-<div class="product-card" data-name="WD 2TB SSD" data-category="Storage">
-    <div class="product-img"><img src="<%=request.getContextPath()%>/images/p40.jpg"></div>
-    <h3>WD 2TB SSD</h3>
-    <p class="category">Storage</p>
-    <div class="price">$179</div>
-    
-    <div class="product-actions">
-    <button class="btn-cart">ADD TO CART</button>
-    <button class="btn-buy">BUY NOW</button>
-</div>
-</div>
-
-
+	<%
+	    List<Product> products = (List<Product>) request.getAttribute("products");
+	    if (products != null && !products.isEmpty()) {
+	        for (Product p : products) {
+	%>
+	    <div class="product-card"
+	         data-name="<%= p.getName() %>"
+	         data-category="<%= p.getCategory() %>"
+	         data-price="<%= p.getPrice() %>"
+	         data-img="<%= request.getContextPath() %>/images/<%= p.getImage() %>">
+	        <div class="product-img">
+	            <img src="<%= request.getContextPath() %>/images/<%= p.getImage() %>" alt="<%= p.getName() %>">
+	        </div>
+	        <h3><%= p.getName() %></h3>
+	        <p class="category"><%= p.getCategory() %></p>
+	        <div class="price">$<%= String.format("%.0f", p.getPrice()) %></div>
+	        <div class="product-actions">
+	            <button class="btn-cart" onclick="addToCart(this)">🛒 ADD TO CART</button>
+	            <button class="btn-buy" onclick="handleBuyNow(this)">BUY NOW</button>
+	        </div>
+	    </div>
+	<%
+	        }
+	    } else {
+	%>
+	    <p style="color:#94a3b8; padding:20px; grid-column:1/-1;">
+	        No products found. Please check your database.
+	    </p>
+	<%
+	    }
+	%>
 	</div>
-	
+
+	<!-- ================= JAVASCRIPT ================= -->
 	<script>
-    const searchInput = document.getElementById("searchInput");
+    const searchInput   = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
-    const products = document.querySelectorAll(".product-card");
+    const productCards  = document.querySelectorAll(".product-card");
+    const isLoggedIn    = ${isLoggedIn == true ? "true" : "false"};
 
-    const isLoggedIn = ${isLoggedIn == true ? "true" : "false"};
-
-    /* ================= FILTER ================= */
+    /* ================= FILTER (unchanged) ================= */
     function filterProducts() {
-        const searchValue = searchInput.value.toLowerCase();
+        const searchValue   = searchInput.value.toLowerCase();
         const categoryValue = categoryFilter.value;
-
-        products.forEach(product => {
-            const name = product.dataset.name.toLowerCase();
+        productCards.forEach(product => {
+            const name     = product.dataset.name.toLowerCase();
             const category = product.dataset.category;
-
-            const matchSearch = name.includes(searchValue);
+            const matchSearch   = name.includes(searchValue);
             const matchCategory = categoryValue === "all" || category === categoryValue;
-
-            if (matchSearch && matchCategory) {
-                product.style.display = "block";
-            } else {
-                product.style.display = "none";
-            }
+            product.style.display = (matchSearch && matchCategory) ? "block" : "none";
         });
     }
-
     searchInput.addEventListener("input", filterProducts);
     categoryFilter.addEventListener("change", filterProducts);
 
     /* ================= CART ================= */
     let cart = [];
-let count = 0;
 
-const cartItemsContainer = document.getElementById("cartItems");
-const totalPriceElement = document.getElementById("totalPrice");
-const cartSidebar = document.getElementById("cartSidebar");
+    function toggleCart() {
+        document.getElementById('cartSidebar').classList.toggle('active');
+    }
 
-/* TOGGLE CART */
-function toggleCart() {
-    cartSidebar.classList.toggle("active");
-}
-
-/* ADD TO CART */
-document.querySelectorAll(".btn-cart").forEach(btn => {
-    btn.addEventListener("click", function () {
-
+    function addToCart(btn) {
         if (!isLoggedIn) {
             alert("Please login first!");
             window.location.href = "${pageContext.request.contextPath}/login";
             return;
         }
 
-        const product = this.closest(".product-card");
+        var card  = btn.closest('.product-card');
+        var name  = card.dataset.name  || card.querySelector('h3').textContent.trim();
+        var price = parseFloat(card.dataset.price || card.querySelector('.price').textContent.replace('$','').trim());
+        var img   = card.dataset.img   || card.querySelector('img').src;
 
-        const name = product.querySelector("h3").textContent.trim();
-        const price = parseFloat(product.querySelector(".price").textContent.replace("$", "").trim());
-        const img = product.querySelector("img").src;
+        // Check if item already exists in cart
+        var existing = cart.find(function(item) { return item.name === name; });
+        if (existing) {
+            existing.qty   += 1;
+            existing.price += price;
+        } else {
+            cart.push({ name: name, price: price, img: img, qty: 1, unitPrice: price });
+        }
 
-        console.log(name, price, img); // DEBUG
+        var original = btn.innerHTML;
+        btn.innerHTML = '✔ ADDED';
+        btn.classList.add('added');
+        setTimeout(function() {
+            btn.innerHTML = original;
+            btn.classList.remove('added');
+        }, 1500);
 
-        cart.push({ name, price, img });
-
-        count++;
-        document.querySelector(".cart-count").textContent = count;
-
+        updateCartCount();
         renderCart();
-    });
-});
+        document.getElementById('cartSidebar').classList.add('active');
+    }
 
-function renderCart() {
-    cartItemsContainer.innerHTML = "";
-    let total = 0;
+    function handleBuyNow(btn) {
+        if (!isLoggedIn) {
+            alert("Please login first!");
+            window.location.href = "${pageContext.request.contextPath}/login";
+            return;
+        }
+        addToCart(btn.previousElementSibling);
+    }
 
-    cart.forEach(item => {
-        total += item.price;
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartCount();
+        renderCart();
+    }
 
-        const div = document.createElement("div");
-        div.className = "cart-item";
+    function updateCartCount() {
+        document.querySelector('.cart-count').textContent = cart.length;
+    }
 
-        div.innerHTML = `
-            <img src="\${item.img}">
-            <div>
-                <p><strong>\${item.name}</strong></p>
-                <p>\${item.price}</p>
-            </div>
-        `;
+    function renderCart() {
+        const container = document.getElementById('cartItems');
 
-        cartItemsContainer.appendChild(div);
-    });
+        if (cart.length === 0) {
+            container.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div>Your cart is empty</div></div>';
+            document.getElementById('totalPrice').textContent = '0.00';
+            return;
+        }
 
-    totalPriceElement.textContent = total.toFixed(2);
-}
+        let html  = '';
+        let total = 0;
 
-    // BUY NOW
-    document.querySelectorAll(".btn-buy").forEach(btn => {
-        btn.addEventListener("click", function () {
-
-            if (!isLoggedIn) {
-                alert("Please login first!");
-                window.location.href = "${pageContext.request.contextPath}/login";
-                return;
-            }
-
-            alert("Proceeding to checkout...");
+        cart.forEach(function(item, i) {
+            var displayName  = item.name  || 'Unknown Product';
+            var displayPrice = isNaN(item.price) ? '0.00' : item.price.toFixed(2);
+            total += item.price || 0;
+            html += '<div class="cart-item">'
+                +     '<img src="' + (item.img || '') + '" alt="' + displayName + '">'
+                +     '<div class="cart-item-info">'
+                +         '<strong>' + displayName + '</strong>'
+                +         '<div class="cart-item-meta">'
+                +             '<span class="cart-item-qty">Qty: ' + item.qty + '</span>'
+                +             '<span class="cart-item-price">$' + displayPrice + '</span>'
+                +         '</div>'
+                +     '</div>'
+                +     '<button class="remove-item" onclick="removeItem(' + i + ')">✕</button>'
+                + '</div>';
         });
-    });
-</script>
 
+        container.innerHTML = html;
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+
+    function handleCheckout() {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+        alert('Proceeding to checkout...');
+    }
+	</script>
 </body>
 </html>

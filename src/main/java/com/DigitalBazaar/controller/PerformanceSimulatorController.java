@@ -1,29 +1,23 @@
 package com.DigitalBazaar.controller;
 
-import com.DigitalBazaar.model.Product;
-import com.DigitalBazaar.model.ProductDAO;
-import com.DigitalBazaar.model.User;
-import com.DigitalBazaar.util.SessionUtil;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
- * Servlet implementation class ShopController
+ * Servlet implementation class PerformanceSimulatorController
  */
-@WebServlet("/shop")
-public class ShopController extends HttpServlet {
+@WebServlet("/PerformanceSimulatorController")
+public class PerformanceSimulatorController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShopController() {
+    public PerformanceSimulatorController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,17 +26,7 @@ public class ShopController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		User user = (User) SessionUtil.getAttribute(request, "user");
-        request.setAttribute("isLoggedIn", user != null);
-
-        // 2. Fetch all products from database
-        ProductDAO dao = new ProductDAO();
-        List<Product> products = dao.getAllProducts();
-        request.setAttribute("products", products);
-
-        // 3. Forward to shop.jsp (unchanged)
-        request.getRequestDispatcher("/WEB-INF/pages/shop.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/performanceSimulator.jsp").forward(request, response);
 	}
 
 	/**

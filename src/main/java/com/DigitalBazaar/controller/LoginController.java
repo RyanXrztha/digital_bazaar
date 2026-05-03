@@ -64,6 +64,8 @@ public class LoginController extends HttpServlet {
 
 	        // ✅ REDIRECT (NOT forward)
 	        response.sendRedirect(request.getContextPath() + "/dashboard");
+	        
+	        dao.updateLastLogin(user.getId());
 
 	    } else {
 	        request.setAttribute("error", "Incorrect password.");

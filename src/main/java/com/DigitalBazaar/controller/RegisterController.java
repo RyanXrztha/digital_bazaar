@@ -39,6 +39,7 @@ public class RegisterController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String fullname = request.getParameter("fullname");
 	    String username = request.getParameter("username");
+	    String email = request.getParameter("email");
 	    String password = request.getParameter("password");
 	    String confirmPassword = request.getParameter("confirmPassword");
 
@@ -47,6 +48,7 @@ public class RegisterController extends HttpServlet {
 	    // 1. Empty fields
 	    if (fullname == null || fullname.trim().isEmpty() ||
 	        username == null || username.trim().isEmpty() ||
+	        email == null || email.trim().isEmpty() || 
 	        password == null || password.trim().isEmpty()) {
 
 	        request.setAttribute("error", "All fields are required.");
@@ -72,6 +74,7 @@ public class RegisterController extends HttpServlet {
 	    User user = new User();
 	    user.setFullname(fullname);
 	    user.setUsername(username);
+	    user.setEmail(email);
 	    user.setPassword(password);
 
 	    boolean success = dao.registerUser(user);

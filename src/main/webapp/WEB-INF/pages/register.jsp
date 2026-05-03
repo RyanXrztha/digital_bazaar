@@ -31,13 +31,13 @@
             <% } %>
 
         <form action="<%=request.getContextPath()%>/register" method="post">
-            <input type="text" name="fullname" placeholder="Full Name" required>
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-
-            <button type="submit">Create Account</button>
-        </form>
+		    <input type="text"     name="fullname"        placeholder="Full Name"       required>
+		    <input type="text"     name="username"         placeholder="Username"        required>
+		    <input type="email"    name="email"            placeholder="Email"           required>  <!-- ADD THIS -->
+		    <input type="password" name="password"         placeholder="Password"        required>
+		    <input type="password" name="confirmPassword"  placeholder="Confirm Password" required>
+		    <button type="submit">Create Account</button>
+		</form>
 
         <p class="switch">
             Already have an account? <a href="<%=request.getContextPath()%>/login">Login</a>

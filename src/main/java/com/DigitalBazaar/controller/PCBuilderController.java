@@ -1,29 +1,30 @@
 package com.DigitalBazaar.controller;
 
-import com.DigitalBazaar.model.Product;
-import com.DigitalBazaar.model.ProductDAO;
-import com.DigitalBazaar.model.User;
-import com.DigitalBazaar.util.SessionUtil;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.DigitalBazaar.model.Product;
+import com.DigitalBazaar.model.ProductDAO;
 
 /**
- * Servlet implementation class ShopController
+ * Servlet implementation class PCBuilderController
  */
-@WebServlet("/shop")
-public class ShopController extends HttpServlet {
+@WebServlet("/pcbuilder")
+public class PCBuilderController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShopController() {
+    public PCBuilderController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,17 +33,22 @@ public class ShopController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ProductDAO dao = new ProductDAO();
+        List<Product> allProducts = dao.getAllProducts();
 
-		User user = (User) SessionUtil.getAttribute(request, "user");
-        request.setAttribute("isLoggedIn", user != null);
+        // Group products by category so JSP can build per-category dropdowns
+        Map<String, List<Product>> byCategory = allProducts.stream()
+        	    .collect(Collectors.groupingBy(
+        	        Product::getCategory,
+        	        LinkedHashMap::new,
+        	        Collectors.toList()
+        	    ));
 
-        // 2. Fetch all products from database
-        ProductDAO dao = new ProductDAO();
-        List<Product> products = dao.getAllProducts();
-        request.setAttribute("products", products);
-
-        // 3. Forward to shop.jsp (unchanged)
-        request.getRequestDispatcher("/WEB-INF/pages/shop.jsp").forward(request, response);
+        request.setAttribute("productsByCategory", byCategory);
+        request.setAttribute("allProducts", allProducts);
+        
+        request.getRequestDispatcher("/WEB-INF/pages/pcBuilder.jsp")
+               .forward(request, response);
 	}
 
 	/**
