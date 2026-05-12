@@ -307,10 +307,11 @@ body {
 /* ================= HERO ================= */
 .hero {
     margin-top: 58px;
-    height: 220px;
+    height: 300px;
     background: var(--hero-bg);
     display: flex; align-items: center;
     padding-left: 80px;
+    padding-bottom: 60px;
     position: relative;
     overflow: hidden;
 }
@@ -884,6 +885,9 @@ input[type=range]::-webkit-slider-thumb:hover {
 
 <!-- ================= HERO ================= -->
 <div class="hero">
+    <img src="${pageContext.request.contextPath}/images/buildpc.png"
+         alt="Hero"
+         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45;">
     <div class="hero-content">
         <div class="hero-eyebrow">PC Builder</div>
         <div class="hero-title">BUILD YOUR <span>DREAM RIG</span></div>

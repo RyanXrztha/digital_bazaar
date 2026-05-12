@@ -918,9 +918,9 @@ footer { padding: 60px 56px 28px; background: #ffffff; }
 
 <!-- ================= HERO ================= -->
 <div class="hero">
-    <video autoplay muted loop playsinline>
-        <source src="${pageContext.request.contextPath}/videos/hero.mp4" type="video/mp4">
-    </video>
+    <img src="${pageContext.request.contextPath}/images/hero.png"
+         alt="Hero"
+         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45;">
     <div class="hero-content">
         <div class="hero-eyebrow">New Season Drop</div>
         <div class="hero-title">
