@@ -7,6 +7,7 @@ public class Product {
     private double price;
     private int stock;
     private String image;       // filename only, e.g. "p1.jpg"
+    private String brand;
     private boolean featured;
 
     // -------- GETTERS & SETTERS --------
@@ -29,6 +30,9 @@ public class Product {
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
 
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+    
     public boolean isFeatured() { return featured; }
     public void setFeatured(boolean featured) { this.featured = featured; }
 }
