@@ -772,7 +772,19 @@ function toggleFaq(btn) {
   if (!isOpen) item.classList.add('open');
 }
 
+var isLoggedIn = ${isLoggedIn != null ? isLoggedIn : false};
+var hasOrders  = ${hasOrders != null ? hasOrders : false};
+
 function handleSubmit() {
+  if (!isLoggedIn) {
+    alert('Please log in to send a message.');
+    window.location.href = '${pageContext.request.contextPath}/login';
+    return;
+  }
+  if (!hasOrders) {
+    alert('Only customers who have placed an order can send a message.');
+    return;
+  }
   var name    = document.getElementById('fullName').value.trim();
   var email   = document.getElementById('email').value.trim();
   var message = document.getElementById('message').value.trim();

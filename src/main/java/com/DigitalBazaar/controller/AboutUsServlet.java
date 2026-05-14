@@ -38,6 +38,14 @@ public class AboutUsServlet extends HttpServlet {
         }
         
         request.setAttribute("isLoggedIn", user != null);
+
+        boolean hasOrders = false;
+        if (user != null) {
+            java.util.List<java.util.Map<String, Object>> orders =
+                new com.DigitalBazaar.model.OrderDAO().getOrdersByUser(user.getId());
+            hasOrders = orders != null && !orders.isEmpty();
+        }
+        request.setAttribute("hasOrders", hasOrders);
         
         
         request.getRequestDispatcher("/WEB-INF/pages/about-us.jsp").forward(request, response);

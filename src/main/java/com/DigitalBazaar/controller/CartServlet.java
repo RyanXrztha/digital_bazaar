@@ -96,7 +96,11 @@ public class CartServlet extends HttpServlet {
             boolean ok = cartDAO.addToCart(user.getId(), productId, qty, p.getPrice());
 
             if (!ok) {
-                out.print("{\"success\":false,\"message\":\"DB insert failed for userId: " + user.getId() + " productId: " + productId + "\"}");
+                int stock = p.getStock();
+                int inCart = cartDAO.getCartQuantity(user.getId(), productId);
+                String msg = "Only " + stock + " in stock" +
+                             (inCart > 0 ? " (" + inCart + " already in your cart)" : "");
+                out.print("{\"success\":false,\"message\":\"" + msg + "\"}");
                 return;
             }
 

@@ -19,18 +19,37 @@ public class CartDAO {
                 ps.setInt(2, productId);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
-                    int existingId  = rs.getInt("id");
-                    int newQty      = rs.getInt("quantity") + quantity;
-                    double newTotal = newQty * unitPrice;
-                    try (PreparedStatement ups = conn.prepareStatement(update)) {
-                        ups.setInt(1, newQty);
-                        ups.setDouble(2, newTotal);
-                        ups.setInt(3, existingId);
-                        return ups.executeUpdate() > 0;
-                    }
+                	int existingId  = rs.getInt("id");
+                	int newQty      = rs.getInt("quantity") + quantity;
+                	// Check stock limit
+                	String stockCheck2 = "SELECT stock FROM products WHERE id = ?";
+                	try (PreparedStatement sc = conn.prepareStatement(stockCheck2)) {
+                	    sc.setInt(1, productId);
+                	    ResultSet sr = sc.executeQuery();
+                	    if (sr.next()) {
+                	        int liveStock = sr.getInt("stock");
+                	        if (liveStock == 0 || newQty > liveStock) return false;
+                	    }
+                	}
+                	double newTotal = newQty * unitPrice;
+                	try (PreparedStatement ups = conn.prepareStatement(update)) {
+                	    ups.setInt(1, newQty);
+                	    ups.setDouble(2, newTotal);
+                	    ups.setInt(3, existingId);
+                	    return ups.executeUpdate() > 0;
+                	}
                 }
             }
             // Not in cart yet — insert
+            String stockCheck = "SELECT stock FROM products WHERE id = ?";
+            try (PreparedStatement sc = conn.prepareStatement(stockCheck)) {
+                sc.setInt(1, productId);
+                ResultSet sr = sc.executeQuery();
+                if (sr.next()) {
+                    int liveStock = sr.getInt("stock");
+                    if (liveStock == 0 || liveStock < quantity) return false;
+                }
+            }
             try (PreparedStatement ps = conn.prepareStatement(insert)) {
                 ps.setInt(1, userId);
                 ps.setInt(2, productId);
@@ -104,14 +123,64 @@ public class CartDAO {
 
     // On checkout — mark all cart items as 'pending'
     public boolean checkoutCart(int userId) {
-        String sql = "UPDATE orders SET status='pending' WHERE user_id=? AND status='cart'";
-        try (Connection conn = DBConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            return ps.executeUpdate() > 0;
+        String getCart     = "SELECT product_id, quantity FROM orders WHERE user_id=? AND status='cart'";
+        String deductStock = "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?";
+        String markPending = "UPDATE orders SET status='pending' WHERE user_id=? AND status='cart'";
+        String clearCart   = "DELETE FROM orders WHERE user_id=? AND status='cart'";
+        try (Connection conn = DBConfig.getDbConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // 1. Collect cart items
+                List<int[]> cartItems = new ArrayList<>();
+                try (PreparedStatement ps = conn.prepareStatement(getCart)) {
+                    ps.setInt(1, userId);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        cartItems.add(new int[]{ rs.getInt("product_id"), rs.getInt("quantity") });
+                    }
+                }
+                // 2. Deduct stock
+                try (PreparedStatement ds = conn.prepareStatement(deductStock)) {
+                    for (int[] item : cartItems) {
+                        ds.setInt(1, item[1]);
+                        ds.setInt(2, item[0]);
+                        ds.setInt(3, item[1]);
+                        ds.addBatch();
+                    }
+                    ds.executeBatch();
+                }
+                // 3. Mark as pending (for order history)
+                try (PreparedStatement ps = conn.prepareStatement(markPending)) {
+                    ps.setInt(1, userId);
+                    ps.executeUpdate();
+                }
+                // 4. Delete cart rows so cart is empty after checkout
+                try (PreparedStatement ps = conn.prepareStatement(clearCart)) {
+                    ps.setInt(1, userId);
+                    ps.executeUpdate();
+                }
+                conn.commit();
+                return true;
+            } catch (Exception e) {
+                conn.rollback();
+                e.printStackTrace();
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public int getCartQuantity(int userId, int productId) {
+        String sql = "SELECT quantity FROM orders WHERE user_id=? AND product_id=? AND status='cart'";
+        try (Connection conn = DBConfig.getDbConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("quantity");
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
     }
 }
