@@ -480,7 +480,7 @@
 					                '<%= p.getStock() %>',
 					                '<%= p.getPrice() %>',
 					                '<%= p.getImage() %>')">Edit</button>
-					            <button class="delete-btn" onclick="deleteProduct('<%= p.getId() %>')">Delete</button>
+					            <button class="delete-btn" onclick="deleteProduct(<%= p.getId() %>)">Delete</button>
 					        </td>
 					    </tr>
 					    <%
@@ -492,6 +492,11 @@
             </div>
         </div>
     </div>
+
+<form id="deleteForm" method="post" action="<%= request.getContextPath() %>/admin-products">
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" id="deleteId" name="id" value="">
+</form>
 
     <div id="productModal" class="modal">
 	    <div class="modal-content">
@@ -531,10 +536,20 @@
 	</div>
 	
 	<!-- Hidden delete form -->
-	<form id="deleteForm" method="post" action="<%= request.getContextPath() %>/admin-products">
-	    <input type="hidden" name="action" value="delete">
-	    <input type="hidden" id="deleteId" name="id" value="">
-	</form>
+
+
+<div id="deleteModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.45);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(2px);">
+  <div onclick="event.stopPropagation()" style="background:#fff;border-radius:16px;border:1px solid #e2e8f0;width:380px;overflow:hidden;box-shadow:0 10px 25px -5px rgba(15,23,42,0.15);animation:modalUp 0.25s ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="padding:28px 28px 0;">
+      <div style="font-size:17px;font-weight:700;color:#0f172a;margin-bottom:8px;">Delete Product?</div>
+      <div style="font-size:13px;color:#64748b;line-height:1.6;">This action cannot be undone. The product will be permanently removed from your inventory.</div>
+    </div>
+    <div style="padding:24px 28px 28px;display:flex;gap:10px;">
+      <button onclick="closeDeleteModal()" style="flex:1;padding:11px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;color:#475569;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="confirmDelete()" style="flex:1;padding:11px;background:#ef4444;border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Yes, Delete</button>
+    </div>
+  </div>
+</div>
 
     <script>
 	    const modal = document.getElementById("productModal");
@@ -588,11 +603,27 @@
 	    }
 	
 	    // ── DELETE ────────────────────────────────────────────────────────────────
-	    function deleteProduct(id) {
-	        if (!confirm("Are you sure you want to delete this product?")) return;
-	        document.getElementById("deleteId").value = id;
-	        document.getElementById("deleteForm").submit();
-	    }
+	    var pendingDeleteId = null;
+
+function deleteProduct(id) {
+    pendingDeleteId = id;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function confirmDelete() {
+    if (!pendingDeleteId) return;
+    document.getElementById('deleteId').value = pendingDeleteId;
+    document.getElementById('deleteForm').submit();
+}
+
+function closeDeleteModal() {
+    pendingDeleteId = null;
+    document.getElementById('deleteModal').style.display = 'none';
+}
+
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
 	
 	    // ── CLOSE MODAL ───────────────────────────────────────────────────────────
 	    function closeModal() { modal.style.display = "none"; }
@@ -637,5 +668,12 @@
 	        document.getElementById("adminCategoryFilter").value = "all";
 	    }
 	</script>
+
+<style>
+@keyframes modalUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
 </body>
 </html>

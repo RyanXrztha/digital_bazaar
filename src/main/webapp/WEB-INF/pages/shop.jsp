@@ -38,7 +38,7 @@ String sessionUsername = (userObj != null) ? userObj.getUsername() : null;
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Shop — Digital Bazaar</title>
@@ -1294,5 +1294,38 @@ window.addEventListener('load', function() {
  
 
 </script>
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;border:1px solid #E4E7EC;width:340px;overflow:hidden;box-shadow:0 24px 60px rgba(13,17,23,0.18);animation:modalUp 0.25s ease;font-family:'DM Sans',sans-serif;">
+    <div style="padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;">
+      
+      <button onclick="closeLoginModal()" style="background:transparent;border:none;color:#9BA5B7;cursor:pointer;font-size:18px;line-height:1;">✕</button>
+    </div>
+    <div style="padding:16px 24px 24px;">
+      <div style="font-size:16px;font-weight:700;color:#0D1117;margin-bottom:6px;">Sign in required</div>
+      <div style="font-size:13px;color:#5A6478;margin-bottom:20px;line-height:1.6;">You need to be logged in to add items to your cart or make a purchase.</div>
+      <a href="/login" id="modalLoginBtn" style="display:block;width:100%;padding:11px;background:#1A56DB;color:#fff;text-align:center;border-radius:5px;font-weight:600;font-size:13px;text-decoration:none;letter-spacing:0.4px;box-sizing:border-box;">Log In</a>
+      <a href="/register" id="modalRegisterBtn" style="display:block;width:100%;padding:11px;background:transparent;border:1px solid #E4E7EC;color:#5A6478;text-align:center;border-radius:5px;font-weight:600;font-size:13px;text-decoration:none;letter-spacing:0.4px;margin-top:8px;box-sizing:border-box;">Create Account</a>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes modalUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+<div id="cartEmptyModal" style="display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:#fff;border-radius:12px;border:1px solid #E4E7EC;width:340px;overflow:hidden;box-shadow:0 24px 60px rgba(13,17,23,0.18);animation:modalUp 0.25s ease;font-family:'DM Sans',sans-serif;">
+    <div style="padding:28px 24px 0;">
+      <div style="width:44px;height:44px;background:#FEF9EC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;">🛒</div>
+      <div style="font-size:16px;font-weight:700;color:#0D1117;margin-bottom:6px;">Your cart is empty</div>
+      <div style="font-size:13px;color:#5A6478;margin-bottom:20px;line-height:1.6;">Add some products to your cart before proceeding to checkout.</div>
+    </div>
+    <div style="padding:0 24px 24px;display:flex;gap:8px;">
+      <button onclick="closeCartEmptyModal()" style="flex:1;padding:11px;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:5px;color:#5A6478;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Dismiss</button>
+      <button onclick="closeCartEmptyModal();window.location.href=CTX+'/shop'" style="flex:1;padding:11px;background:#1A56DB;border:none;border-radius:5px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Go to Shop</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

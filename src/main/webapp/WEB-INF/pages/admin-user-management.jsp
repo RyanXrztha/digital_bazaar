@@ -105,6 +105,12 @@
     th, td { padding: 16px 24px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
     th { font-size: 11px; font-weight: 600; color: #64748b; background-color: #f8fafc; text-transform: uppercase; }
     td { font-size: 13px; color: #334155; }
+
+@keyframes modalUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
     
     .edit-btn { 
     background: #f1f5f9; 
@@ -197,18 +203,13 @@
 					        <td>${not empty u.lastLogin ? u.lastLogin : 'Never'}</td>
 					        <td>${not empty u.createdDate ? u.createdDate : '—'}</td>
 					        <td>
-					            <form method="post" action="${pageContext.request.contextPath}/manage-user" style="display:inline">
-					                <input type="hidden" name="action" value="toggleStatus">
-					                <input type="hidden" name="userId" value="${u.id}">
-					                <button type="submit" class="edit-btn">Toggle</button>
-					            </form>
-					            <form method="post" action="${pageContext.request.contextPath}/manage-user" style="display:inline"
-					                  onsubmit="return confirm('Delete this user?')">
-					                <input type="hidden" name="action" value="delete">
-					                <input type="hidden" name="userId" value="${u.id}">
-					                <button type="submit" class="delete-btn">Delete</button>
-					            </form>
-					        </td>
+							    <form method="post" action="${pageContext.request.contextPath}/manage-user" style="display:inline">
+							        <input type="hidden" name="action" value="toggleStatus">
+							        <input type="hidden" name="userId" value="${u.id}">
+							        <button type="submit" class="edit-btn">Toggle</button>
+							    </form>
+							    <button class="delete-btn" onclick="deleteUser(${u.id})">Delete</button>
+							</td>
 					    </tr>
 					</c:forEach>
 					</tbody>
@@ -318,6 +319,46 @@ window.onclick = function(e) {
     var modal = document.getElementById('adminModal');
     if (e.target === modal) closeAdminModal();
 }
+var pendingDeleteUserId = null;
+
+function deleteUser(id) {
+    pendingDeleteUserId = id;
+    document.getElementById('deleteUserModal').style.display = 'flex';
+}
+
+function confirmUserDelete() {
+    if (!pendingDeleteUserId) return;
+    document.getElementById('deleteUserId').value = pendingDeleteUserId;
+    document.getElementById('deleteUserForm').submit();
+}
+
+function closeDeleteUserModal() {
+    pendingDeleteUserId = null;
+    document.getElementById('deleteUserModal').style.display = 'none';
+}
+
+document.getElementById('deleteUserModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteUserModal();
+});
 </script>
+<!-- Delete User Confirmation Modal -->
+<div id="deleteUserModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:2000; align-items:center; justify-content:center; backdrop-filter:blur(2px);">
+  <div onclick="event.stopPropagation()" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; width:380px; overflow:hidden; box-shadow:0 10px 25px -5px rgba(15,23,42,0.15); animation:modalUp 0.25s ease; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+    <div style="padding:28px 28px 0;">
+      <div style="font-size:17px; font-weight:700; color:#0f172a; margin-bottom:8px;">Delete User?</div>
+      <div style="font-size:13px; color:#64748b; line-height:1.6;">This action cannot be undone. The user account will be permanently removed from the system.</div>
+    </div>
+    <div style="padding:24px 28px 28px; display:flex; gap:10px;">
+      <button onclick="closeDeleteUserModal()" style="flex:1; padding:11px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; color:#475569; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+      <button onclick="confirmUserDelete()" style="flex:1; padding:11px; background:#ef4444; border:none; border-radius:8px; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden delete form -->
+<form id="deleteUserForm" method="post" action="${pageContext.request.contextPath}/manage-user">
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" id="deleteUserId" name="userId" value="">
+</form>
 </body>
 </html>

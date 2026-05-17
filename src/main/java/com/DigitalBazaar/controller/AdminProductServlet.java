@@ -107,13 +107,23 @@ public class AdminProductServlet extends HttpServlet {
                 }
 
             } else if ("delete".equals(action)) {
-                String sql = "DELETE FROM products WHERE id=?";
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                    ps.setInt(1, Integer.parseInt(request.getParameter("id")));
+                String idParam = request.getParameter("id");
+                int productId = Integer.parseInt(idParam);
+                
+                // First delete related orders
+                String deleteOrders = "DELETE FROM orders WHERE product_id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(deleteOrders)) {
+                    ps.setInt(1, productId);
+                    ps.executeUpdate();
+                }
+                
+                // Then delete the product
+                String deleteProduct = "DELETE FROM products WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(deleteProduct)) {
+                    ps.setInt(1, productId);
                     ps.executeUpdate();
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

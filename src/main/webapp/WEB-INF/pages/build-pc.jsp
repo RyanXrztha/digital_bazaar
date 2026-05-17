@@ -1094,7 +1094,7 @@ input[type=range]::-webkit-slider-thumb:hover {
     /* ---------- Budget ---------- */
     function syncBudget(val, src) {
         var n = Math.max(50000, Math.min(500000, parseInt(val) || 50000));
-        document.getElementById('budgetDisplay').textContent = fmtNPR(n);
+        document.getElementById('budgetDisplay').textContent = formatNPR(n);
         if (src !== 'input')  document.getElementById('budgetInput').value  = n;
         if (src !== 'slider') document.getElementById('budgetSlider').value = n;
         updateBudgetPercent();
@@ -1168,8 +1168,8 @@ input[type=range]::-webkit-slider-thumb:hover {
         var keys  = Object.keys(selected);
         var total = getTotal();
 
-        document.getElementById('summaryTotal').textContent = fmtNPR(total);
-        document.getElementById('grandTotal').textContent   = fmtNPR(total);
+        document.getElementById('summaryTotal').textContent = formatNPR(total);
+        document.getElementById('grandTotal').textContent   = formatNPR(total);
         document.getElementById('selectedCount').textContent = keys.length + ' selected';
         document.getElementById('summaryNote').textContent  =
             keys.length === 0 ? 'No components selected' :
@@ -1187,7 +1187,7 @@ input[type=range]::-webkit-slider-thumb:hover {
                     + '<div class="selected-item-cat">' + cat + '</div>'
                     + '<div class="selected-item-name">' + item.name + '</div>'
                     + '</div>'
-                    + '<div class="selected-item-price">₨ ' + fmtNPR(item.price) + '</div>'
+                    + '<div class="selected-item-price">₨ ' + formatNPR(item.price) + '</div>'
                     + '</div>';
             });
             listEl.innerHTML = html;
@@ -1237,41 +1237,45 @@ input[type=range]::-webkit-slider-thumb:hover {
         });
     }
     
-    function handleBuyNow(btn) {
-        if (!isLoggedIn) {
-            alert("Please login first!");
-            window.location.href = CTX + "/login";
-            return;
-        }
-        var card  = btn.closest('.product-card');
-        var name  = card.dataset.name;
-        var price = parseFloat(card.dataset.price);
+    
 
-        // Build and submit a form directly — skip the cart entirely
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = CTX + '/checkout';
-
-        var n = document.createElement('input');
-        n.type = 'hidden'; n.name = 'productName'; n.value = name;
-        form.appendChild(n);
-
-        var q = document.createElement('input');
-        q.type = 'hidden'; q.name = 'quantity'; q.value = '1';
-        form.appendChild(q);
-
-        var t = document.createElement('input');
-        t.type = 'hidden'; t.name = 'totalPrice'; t.value = price.toFixed(2);
-        form.appendChild(t);
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    /* ---------- Init ---------- */
+    loadCart(); // add this line
     renderSummary();
 
     
 </script>
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;border:1px solid #E4E7EC;width:340px;overflow:hidden;box-shadow:0 24px 60px rgba(13,17,23,0.18);animation:modalUp 0.25s ease;font-family:'DM Sans',sans-serif;">
+    <div style="padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;">
+      
+      <button onclick="closeLoginModal()" style="background:transparent;border:none;color:#9BA5B7;cursor:pointer;font-size:18px;line-height:1;">✕</button>
+    </div>
+    <div style="padding:16px 24px 24px;">
+      <div style="font-size:16px;font-weight:700;color:#0D1117;margin-bottom:6px;">Sign in required</div>
+      <div style="font-size:13px;color:#5A6478;margin-bottom:20px;line-height:1.6;">You need to be logged in to add items to your cart or make a purchase.</div>
+      <a href="/login" id="modalLoginBtn" style="display:block;width:100%;padding:11px;background:#1A56DB;color:#fff;text-align:center;border-radius:5px;font-weight:600;font-size:13px;text-decoration:none;letter-spacing:0.4px;box-sizing:border-box;">Log In</a>
+      <a href="/register" id="modalRegisterBtn" style="display:block;width:100%;padding:11px;background:transparent;border:1px solid #E4E7EC;color:#5A6478;text-align:center;border-radius:5px;font-weight:600;font-size:13px;text-decoration:none;letter-spacing:0.4px;margin-top:8px;box-sizing:border-box;">Create Account</a>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes modalUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+<div id="cartEmptyModal" style="display:none;position:fixed;inset:0;background:rgba(13,17,23,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:#fff;border-radius:12px;border:1px solid #E4E7EC;width:340px;overflow:hidden;box-shadow:0 24px 60px rgba(13,17,23,0.18);animation:modalUp 0.25s ease;font-family:'DM Sans',sans-serif;">
+    <div style="padding:28px 24px 0;">
+      <div style="width:44px;height:44px;background:#FEF9EC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;">🛒</div>
+      <div style="font-size:16px;font-weight:700;color:#0D1117;margin-bottom:6px;">Your cart is empty</div>
+      <div style="font-size:13px;color:#5A6478;margin-bottom:20px;line-height:1.6;">Add some products to your cart before proceeding to checkout.</div>
+    </div>
+    <div style="padding:0 24px 24px;display:flex;gap:8px;">
+      <button onclick="closeCartEmptyModal()" style="flex:1;padding:11px;background:#F2F4F7;border:1px solid #E4E7EC;border-radius:5px;color:#5A6478;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Dismiss</button>
+      <button onclick="closeCartEmptyModal();window.location.href=CTX+'/shop'" style="flex:1;padding:11px;background:#1A56DB;border:none;border-radius:5px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Go to Shop</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

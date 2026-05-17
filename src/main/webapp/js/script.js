@@ -46,9 +46,8 @@ function formatNPR(amount) {
     /* ── Add to cart ── */
     function addToCart(btn) {
     if (!isLoggedIn) {
-        alert("Please login first!");
-        window.location.href = CTX + "/login";
-        return;
+		showLoginModal();
+		return;
     }
     var card      = btn.closest('.product-card');
     var productId = card.dataset.productId;
@@ -137,9 +136,8 @@ function formatNPR(amount) {
     /* ── Buy Now (still direct checkout, no DB cart needed) ── */
     function handleBuyNow(btn) {
         if (!isLoggedIn) {
-            alert("Please login first!");
-            window.location.href = CTX + "/login";
-            return;
+			showLoginModal();
+			return;
         }
         var card  = btn.closest('.product-card');
         var name  = card.dataset.name;
@@ -166,30 +164,41 @@ function formatNPR(amount) {
     }
 
     /* ── Checkout — submit all cart items then mark as pending ── */
-    function handleCheckout() {
-        if (cart.length === 0) { alert('Your cart is empty!'); return; }
+	function handleCheckout() {
+	    if (cart.length === 0) {
+	        showCartEmptyModal();
+	        return;
+	    }
 
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = CTX + '/checkout';
+	    var form = document.createElement('form');
+	    form.method = 'POST';
+	    form.action = CTX + '/checkout';
 
-        cart.forEach(function(item) {
-            var n = document.createElement('input');
-            n.type = 'hidden'; n.name = 'productName'; n.value = item.name;
-            form.appendChild(n);
+	    cart.forEach(function(item) {
+	        var n = document.createElement('input');
+	        n.type = 'hidden'; n.name = 'productName'; n.value = item.name;
+	        form.appendChild(n);
 
-            var q = document.createElement('input');
-            q.type = 'hidden'; q.name = 'quantity'; q.value = item.qty;
-            form.appendChild(q);
+	        var q = document.createElement('input');
+	        q.type = 'hidden'; q.name = 'quantity'; q.value = item.qty;
+	        form.appendChild(q);
 
-            var tp = document.createElement('input');
-            tp.type = 'hidden'; tp.name = 'totalPrice'; tp.value = item.price.toFixed(2);
-            form.appendChild(tp);
-        });
+	        var tp = document.createElement('input');
+	        tp.type = 'hidden'; tp.name = 'totalPrice'; tp.value = item.price.toFixed(2);
+	        form.appendChild(tp);
+	    });
 
-        document.body.appendChild(form);
-        form.submit();
-    }
+	    document.body.appendChild(form);
+	    form.submit();
+	}
+
+	function showCartEmptyModal() {
+	    document.getElementById('cartEmptyModal').style.display = 'flex';
+	}
+
+	function closeCartEmptyModal() {
+	    document.getElementById('cartEmptyModal').style.display = 'none';
+	}
 
     /* ── Init ── */
     loadCart();
@@ -210,3 +219,21 @@ function formatNPR(amount) {
             document.getElementById('profileBtn').classList.remove('open');
         }
     });
+	
+	function showLoginModal() {
+	  var modal = document.getElementById('loginModal');
+	  // Fix hrefs using CTX so they work on all pages
+	  document.getElementById('modalLoginBtn').href = CTX + '/login';
+	  document.getElementById('modalRegisterBtn').href = CTX + '/register';
+	  modal.style.display = 'flex';
+	}
+
+	function closeLoginModal() {
+	  document.getElementById('loginModal').style.display = 'none';
+	}
+
+	// Close when clicking the dark overlay backdrop
+	document.addEventListener('click', function(e) {
+	  var modal = document.getElementById('loginModal');
+	  if (e.target === modal) closeLoginModal();
+	});
